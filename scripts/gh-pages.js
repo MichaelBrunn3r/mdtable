@@ -1,10 +1,10 @@
 const ghpages = require('gh-pages');
 
 ghpages.publish(
-    '__sapper__/export/<REPONAME>',
+    '__sapper__/export',
     {
-        branch: 'gh-pages',
-        repo: 'https://github.com/MichaelBrunn3r/<REPONAME>.git',
+        branch: 'main',
+        repo: 'https://github.com/MichaelBrunn3r/MichaelBrunn3r.github.io.git',
         user: {
             name: 'MichaelBrunn3r',
             email: 'MichaelBrunn3r@gmail.com'

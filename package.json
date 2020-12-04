@@ -1,11 +1,11 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "MichaelBrunn3r.github.io",
+  "description": "Personal Github Website",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
-    "export": "sapper export --basepath <REPONAME> --legacy",
+    "export": "sapper export --legacy",
     "start": "node __sapper__/build",
     "deploy": "npm run export && node ./scripts/gh-pages.js"
   },
