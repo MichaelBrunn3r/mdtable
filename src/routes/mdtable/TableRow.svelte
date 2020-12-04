@@ -1,4 +1,6 @@
 <script>
+	import AutoresizeTextarea from './AutoresizeTextarea.svelte';
+
 	export let isHeader = false;
 	export let entries;
 </script>
@@ -10,15 +12,15 @@
 
 	td, th {
 		border: 1px solid #dfe2e5;
-		padding: 6px 13px;
+		padding: 6px 6px;
 	}
 </style>
 
-
 {#each entries as entry}
 	{#if isHeader}
-		<th>{entry}</th>
+		<th><AutoresizeTextarea/></th>
 	{:else}
-		<td>{entry}</td>
+		<td><AutoresizeTextarea/></td>
 	{/if}
 {/each}
+
