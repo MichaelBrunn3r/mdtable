@@ -1,6 +1,13 @@
 <script>
 	export let isHeader = false;
-	export let value;
+	export let value = "";
+
+	const initValue = value;
+
+	function valueChanged(e) {
+		const newVal = e.target.innerText;
+		value = newVal.substr(0, newVal.length-1);
+	}
 </script>
 
 <style>
@@ -16,7 +23,7 @@
 </style>
 
 {#if isHeader}
-	<th contenteditable=true>{value}</th>
+	<th contenteditable=true on:input={valueChanged} innerText={value}>{initValue}</th>
 {:else}
-	<td contenteditable=true>{value}</td>
+	<td contenteditable=true on:input={valueChanged} innerText={value}>{initValue}</td>
 {/if}

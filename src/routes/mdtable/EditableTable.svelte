@@ -1,19 +1,16 @@
 <script>
-	import TableRow from './TableRow.svelte';
+	import EditableCell from './EditableCell.svelte';
 
 	export let header = ["Tables", "Are", "Cool"];
-	export let rows = [["col 1 is", "left aligned", "$1600"],["col 2 is","centered", "$12"],["col 3 is", "right-aligned", "$1"],["col 1 is", "left aligned", "$1600"],["col 1 is", "left aligned", "$1600"]];
-
-	function addRow() {
-		rows.push(['a', 'b', 'c'])
-		rows = rows;
-	}
-
+	export let rows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
 </script>
 
 <style>
 	tbody tr:nth-child(even) {
 		background-color: #f6f8fa;
+	}
+	tr {
+		height: 35px;
 	}
 
 	button {
@@ -26,7 +23,7 @@
 	.wrapper-horizontal {
 		display: flex;
 		justify-content: center;
-		margin-right: -30px;
+		margin-left: 30px;
 	}
 
 	.wrapper-vertical {
@@ -45,13 +42,17 @@
 		<table>
 			<thead>
 				<tr>
-					<TableRow isHeader={true} entries={header}/>
+					{#each header as entry,i}
+						<EditableCell bind:value={entry} isHeader=true/>
+					{/each}
 				</tr>
 			</thead>
 			<tbody>
-				{#each rows as row}
+				{#each rows as row,i}
 					<tr>
-						<TableRow entries={row}/>
+						{#each row as entry,k}
+							<EditableCell bind:value={entry}/>
+						{/each}
 					</tr>
 				{/each}
 			</tbody>
