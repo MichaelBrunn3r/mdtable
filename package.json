@@ -1,11 +1,11 @@
 {
-  "name": "MichaelBrunn3r.github.io",
-  "description": "Personal Github Website",
+  "name": "mdtable",
+  "description": "Markdown Table Generator",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",
-    "export": "sapper export --legacy",
+    "export": "sapper export --basepath mdtable --legacy",
     "start": "node __sapper__/build",
     "deploy": "npm run export && node ./scripts/gh-pages.js",
     "validate": "svelte-check --ignore src/node_modules/@sapper"

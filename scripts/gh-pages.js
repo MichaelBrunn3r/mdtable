@@ -1,10 +1,10 @@
 const ghpages = require('gh-pages');
 
 ghpages.publish(
-    '__sapper__/export',
+    '__sapper__/export/mdtable',
     {
-        branch: 'main',
-        repo: 'https://github.com/MichaelBrunn3r/MichaelBrunn3r.github.io.git',
+        branch: 'gh-pages',
+        repo: 'https://github.com/MichaelBrunn3r/mdtable.git',
         user: {
             name: 'MichaelBrunn3r',
             email: 'MichaelBrunn3r@gmail.com'
