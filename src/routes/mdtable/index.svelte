@@ -1,5 +1,5 @@
 <script lang="ts">
-	import InteractiveTable from './InteractiveTable.svelte';
+	import EditableTable from './EditableTable.svelte';
 </script>
 
-<InteractiveTable />
+<EditableTable />
