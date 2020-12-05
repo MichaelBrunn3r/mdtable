@@ -5,8 +5,14 @@
 	const initValue = value;
 
 	function valueChanged(e) {
-		const newVal = e.target.innerText;
-		value = newVal.substr(0, newVal.length-1);
+		let newVal = e.target.innerText;
+
+		// Clean up redundant newline
+		if(newVal.charAt(newVal.length-1) == '\n') {
+			newVal = newVal.substr(0, newVal.length-1);
+		}
+
+		value = newVal;
 	}
 </script>
 
