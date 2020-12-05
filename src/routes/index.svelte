@@ -1,1 +1,5 @@
-<h1>Coming ... soon?</h1>
+<script lang="ts">
+	import EditableTable from './EditableTable.svelte';
+</script>
+
+<EditableTable />
