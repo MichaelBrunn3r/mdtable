@@ -10,7 +10,6 @@ import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import autoPreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
-import copy from 'rollup-plugin-copy';
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
@@ -27,12 +26,6 @@ export default {
 		input: config.client.input().replace(/\.js$/, '.ts'),
 		output: config.client.output(),
 		plugins: [
-			copy({
-				targets: [{
-					src: 'node_modules/bootstrap/dist/css/bootstrap.min.css',
-					dest: 'static'
-				}]
-			}),
 			replace({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode)
