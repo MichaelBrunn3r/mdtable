@@ -3,6 +3,25 @@
 
 	export let header = ["Tables", "Are", "Cool"];
 	export let rows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
+
+	function addRow() {
+		let row = new Array(header.length);
+		row.fill('')
+		rows.push(row)
+		rows = rows;
+	}
+
+	function addColumn() {
+		header.push('');
+		header = header;
+
+		for(let i=0; i<rows.length; i++) {
+			rows[i].push('');
+		}
+
+		rows = rows;
+	}
+
 </script>
 
 <style>
@@ -57,7 +76,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<button type="button" class="btn"><i class="far fa-plus-square"></i></button>
+		<button type="button" class="btn" on:click={addRow}><i class="far fa-plus-square"></i></button>
 	</div>
-	<button id="btn-add-col" type="button" class="btn"><i class="far fa-plus-square"></i></button>
+	<button id="btn-add-col" type="button" class="btn" on:click={addColumn}><i class="far fa-plus-square"></i></button>
 </div>
