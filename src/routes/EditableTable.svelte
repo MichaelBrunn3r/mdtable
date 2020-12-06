@@ -7,6 +7,14 @@
 	tableStore.subscribeRows(storedRows => {
 		rows = storedRows;
 	})
+
+	let selectedRow = undefined;
+	let selectedColumn = undefined;
+
+	function selectCell(row, column) {
+		selectedRow = row;
+		selectedColumn = column;
+	}
 </script>
 
 <style>
@@ -29,6 +37,10 @@
 		padding: 20px 25px;
 		padding-top: 0;
 	}
+
+	.selected {
+		border: 2px solid #b9b9b9;
+	}
 </style>
 
 <div class="d-flex justify-content-center">
@@ -37,9 +49,9 @@
 			<thead>
 				<tr>
 					{#if rows && rows.length > 0}
-						{#each rows[0] as entry}
-							<th >
-							<EditableCell bind:value={entry}/>
+						{#each rows[0] as entry, colidx}
+							<th on:click={() => selectCell(0, colidx)} class:selected={selectedRow === 0 && selectedColumn === colidx}>
+							<EditableCell bind:value={entry} isSelected={selectedRow === 0 && selectedColumn === colidx}/>
 							</th>
 						{/each}
 					{/if}
@@ -47,11 +59,11 @@
 			</thead>
 			<tbody>
 				{#if rows && rows.length > 1}
-					{#each rows.slice(1) as row}
+					{#each rows.slice(1) as row, rowidx}
 						<tr>
-							{#each row as entry}
-								<td >
-									<EditableCell bind:value={entry}/>
+							{#each row as entry, colidx}
+								<td on:click={() => selectCell(rowidx+1, colidx)} class:selected={selectedRow === rowidx+1 && selectedColumn === colidx}>
+									<EditableCell bind:value={entry} isSelected={selectedRow === rowidx+1 && selectedColumn === colidx}/>
 								</td>
 							{/each}
 						</tr>
