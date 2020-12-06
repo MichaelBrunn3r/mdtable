@@ -1,40 +1,38 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
 
-	export let direction = "vertical";
-
 	const dispatch = createEventDispatcher();
 
-	let dragTriggerLen = 30;
-
 	let elem;
-	let initialPos = 0;
+	let initialX;
+	let initialY;
 
 	function dragStart(e) {
-		if(direction === "vertical") {
-			initialPos = e.clientY;
-		} else {
-			initialPos = e.clientX;
-		}
+		initialX = e.clientX;
+		initialY = e.clientY;
 
 		document.addEventListener('mousemove', drag);
 		document.addEventListener('mouseup', dragEnd);
 	}
 
 	function drag(e) {
-		let diff;
-		if(direction === "vertical") {
-			diff = e.clientY - initialPos;
-		} else {
-			diff = e.clientX - initialPos;
+		let diffX = e.clientX - initialX;
+		let diffY = e.clientY - initialY;
+
+		if(diffX >= 14) {
+			dispatch('resizeH+');
+			initialX = e.clientX;
+		} else if(diffX <= -14) {
+			dispatch('resizeH-');
+			initialX = e.clientX;
 		}
 
-		if(diff >= dragTriggerLen) {
-			dispatch('resizePositve');
-			initialPos = direction === "vertical" ? e.clientY : e.clientX;
-		} else if(diff <= - dragTriggerLen) {
-			dispatch('resizeNegative');
-			initialPos = direction === "vertical" ? e.clientY : e.clientX;
+		if(diffY >= 30) {
+			dispatch('resizeV+');
+			initialY = e.clientY;
+		} else if(diffY <= -30) {
+			dispatch('resizeV-');
+			initialY = e.clientY;
 		}
 	}
 
@@ -48,19 +46,13 @@
 	button {
 		font-size: 1rem;
 		padding: 0 8px;
-	}
-
-	.horizontal {
-		margin-bottom: 30px;
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		transform: scaleX(-1);
 	}
 </style>
 
-{#if direction === "vertical"}
-	<button type="button" class="btn" bind:this={elem} on:mousedown|preventDefault={dragStart}>
-			<i class="fas fa-arrows-alt-v"/>
-	</button>
-{:else}
-	<button type="button" class="btn horizontal" bind:this={elem} on:mousedown|preventDefault={dragStart}>
-		<i class="fas fa-arrows-alt-h"/>
-	</button>
-{/if}
+<button type="button" class="btn" bind:this={elem} on:mousedown|preventDefault={dragStart}>
+	<i class="fas fa-expand-alt"></i>
+</button>

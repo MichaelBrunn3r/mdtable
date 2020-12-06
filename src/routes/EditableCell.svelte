@@ -24,8 +24,7 @@
 	td, th {
 		border: 1px solid #dfe2e5;
 		padding: 6px 6px;
-		min-width: 40px;
-		min-height: 30px;
+		min-width: 30px;
 	}
 </style>
 

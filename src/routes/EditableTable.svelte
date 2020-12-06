@@ -43,25 +43,21 @@
 	tbody tr:nth-child(even) {
 		background-color: #f6f8fa;
 	}
+
 	tr {
-		height: 35px;
+		height: 30px;
 	}
 
-	.wrapper-horizontal {
-		display: flex;
-		justify-content: center;
-		margin-left: 30px;
-	}
-
-	.wrapper-vertical {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
+	.wrapper {
+		position: relative;
+		display: inline-block;
+		padding: 20px 25px;
+		padding-top: 0;
 	}
 </style>
 
-<div class="wrapper-horizontal">
-	<div class="wrapper-vertical">
+<div class="d-flex justify-content-center">
+	<div class="wrapper">
 		<table>
 			<thead>
 				<tr>
@@ -80,7 +76,6 @@
 				{/each}
 			</tbody>
 		</table>
-		<ResizeTableButton on:resizePositve={addRow} on:resizeNegative={removeRow} />
+		<ResizeTableButton on:resizeH+={addColumn} on:resizeH-={removeColumn} on:resizeV+={addRow} on:resizeV-={removeRow}/>
 	</div>
-	<ResizeTableButton direction="horizontal" on:resizePositve={addColumn} on:resizeNegative={removeColumn}/>
 </div>
