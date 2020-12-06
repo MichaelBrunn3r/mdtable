@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
-	let elem;
-	let initialX;
-	let initialY;
+	let elem: HTMLElement;
+	let initialX: number;
+	let initialY: number;
 
-	function dragStart(e) {
+	function dragStart(e: MouseEvent) {
 		initialX = e.clientX;
 		initialY = e.clientY;
 
@@ -15,7 +15,7 @@
 		document.addEventListener('mouseup', dragEnd);
 	}
 
-	function drag(e) {
+	function drag(e: MouseEvent) {
 		let diffX = e.clientX - initialX;
 		let diffY = e.clientY - initialY;
 
@@ -36,7 +36,7 @@
 		}
 	}
 
-	function dragEnd(e) {
+	function dragEnd(e: MouseEvent) {
 		document.removeEventListener('mousemove', drag);
 		document.removeEventListener('mouseup', dragEnd);
 	}

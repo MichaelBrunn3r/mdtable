@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import EditableCell from './EditableCell.svelte';
 	import ResizeTableButton from './ResizeTableButton.svelte';
 	import tableStore from './table-store';
@@ -8,10 +8,10 @@
 		rows = storedRows;
 	})
 
-	let selectedRow = undefined;
-	let selectedColumn = undefined;
+	let selectedRow: number = undefined;
+	let selectedColumn: number = undefined;
 
-	function selectCell(row, column) {
+	function selectCell(row: number, column: number) {
 		selectedRow = row;
 		selectedColumn = column;
 	}

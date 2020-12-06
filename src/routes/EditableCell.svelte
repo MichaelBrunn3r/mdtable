@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
-	export let value = "";
-	export let isSelected;
+	export let value: string = "";
+	export let isSelected: boolean;
 
 	const dispatch = createEventDispatcher();
-	let initValue = value;
+	let initValue: string = value;
 
-	function valueChanged(e) {
+	function valueChanged(e: Event) {
 		let newVal = e.target.innerText;
 
 		// Clean up redundant newline
@@ -29,6 +29,10 @@
 		min-height: 30px;
 		width: fit-content;
 		height: fit-content;
+	}
+
+	[contenteditable=true].input {
+		cursor: text;
 	}
 
 	td {
