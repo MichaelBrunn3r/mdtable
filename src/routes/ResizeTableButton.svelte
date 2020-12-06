@@ -43,16 +43,15 @@
 </script>
 
 <style>
-	button {
+	i {
 		font-size: 1rem;
 		padding: 0 8px;
 		position: absolute;
 		bottom: 0px;
 		right: 0px;
 		transform: scaleX(-1);
+		cursor: nwse-resize;
 	}
 </style>
 
-<button type="button" class="btn" bind:this={elem} on:mousedown|preventDefault={dragStart}>
-	<i class="fas fa-expand-alt"></i>
-</button>
+<i class="fas fa-expand-alt" bind:this={elem} on:mousedown|preventDefault={dragStart}></i>
