@@ -1,8 +1,11 @@
 <script>
-	export let isHeader = false;
-	export let value = "";
+	import { createEventDispatcher } from 'svelte';
 
-	const initValue = value;
+	export let value = "";
+	export let isSelected;
+
+	const dispatch = createEventDispatcher();
+	let initValue = value;
 
 	function valueChanged(e) {
 		let newVal = e.target.innerText;
@@ -14,6 +17,10 @@
 
 		value = newVal;
 	}
+
+	function onCellClicked() {
+		dispatch('clicked');
+	}
 </script>
 
 <style>
@@ -23,6 +30,18 @@
 		width: fit-content;
 		height: fit-content;
 	}
+
+	td {
+		cursor: default;
+		border: 1px solid #dfe2e5;
+		padding: 0;
+	}
+
+	.selected {
+		border: 2px solid #b9b9b9;
+	}
 </style>
 
-<div class="input" innerText={value} on:input={valueChanged} contenteditable={true}></div>
+<td class:selected={isSelected} on:click={onCellClicked} tabindex=0>
+	<div class="input" innerText={value} on:input={valueChanged} contenteditable={isSelected}>{initValue}</div>
+</td>

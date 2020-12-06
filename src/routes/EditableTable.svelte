@@ -18,17 +18,12 @@
 </script>
 
 <style>
-	tbody tr:nth-child(even) {
-		background-color: #f6f8fa;
-	}
-
-	th {
+	thead tr {
 		font-weight: 600;
 	}
 
-	td, th {
-		border: 1px solid #dfe2e5;
-		padding: 0;
+	tbody tr:nth-child(even) {
+		background-color: #f6f8fa;
 	}
 
 	.wrapper {
@@ -36,10 +31,6 @@
 		display: inline-block;
 		padding: 20px 25px;
 		padding-top: 0;
-	}
-
-	.selected {
-		border: 2px solid #b9b9b9;
 	}
 </style>
 
@@ -49,22 +40,24 @@
 			<thead>
 				<tr>
 					{#if rows && rows.length > 0}
-						{#each rows[0] as entry, colidx}
-							<th on:click={() => selectCell(0, colidx)} class:selected={selectedRow === 0 && selectedColumn === colidx}>
-							<EditableCell bind:value={entry} isSelected={selectedRow === 0 && selectedColumn === colidx}/>
-							</th>
+						{#each rows[0] as entry, columnIdx}
+							<EditableCell
+								bind:value={entry}
+								isSelected={selectedRow === 0 && selectedColumn === columnIdx}
+								on:clicked={() => selectCell(0,columnIdx)} />
 						{/each}
 					{/if}
 				</tr>
 			</thead>
 			<tbody>
 				{#if rows && rows.length > 1}
-					{#each rows.slice(1) as row, rowidx}
+					{#each rows.slice(1) as row, rowIdx}
 						<tr>
-							{#each row as entry, colidx}
-								<td on:click={() => selectCell(rowidx+1, colidx)} class:selected={selectedRow === rowidx+1 && selectedColumn === colidx}>
-									<EditableCell bind:value={entry} isSelected={selectedRow === rowidx+1 && selectedColumn === colidx}/>
-								</td>
+							{#each row as entry, columnIdx}
+								<EditableCell
+									bind:value={entry}
+									isSelected={selectedRow === rowIdx+1 && selectedColumn === columnIdx}
+									on:clicked={() => selectCell(rowIdx+1,columnIdx)} />
 							{/each}
 						</tr>
 					{/each}
