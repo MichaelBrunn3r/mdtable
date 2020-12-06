@@ -17,19 +17,12 @@
 </script>
 
 <style>
-	th {
-		font-weight: 600;
-	}
-
-	td, th {
-		border: 1px solid #dfe2e5;
-		padding: 6px 6px;
+	.input {
 		min-width: 30px;
+		min-height: 30px;
+		width: fit-content;
+		height: fit-content;
 	}
 </style>
 
-{#if isHeader}
-	<th contenteditable=true on:input={valueChanged} innerText={value}>{initValue}</th>
-{:else}
-	<td contenteditable=true on:input={valueChanged} innerText={value}>{initValue}</td>
-{/if}
+<div class="input" innerText={value} on:input={valueChanged} contenteditable={true}></div>

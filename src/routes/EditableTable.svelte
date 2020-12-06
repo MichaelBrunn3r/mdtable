@@ -14,8 +14,13 @@
 		background-color: #f6f8fa;
 	}
 
-	tr {
-		height: 30px;
+	th {
+		font-weight: 600;
+	}
+
+	td, th {
+		border: 1px solid #dfe2e5;
+		padding: 0;
 	}
 
 	.wrapper {
@@ -33,7 +38,9 @@
 				<tr>
 					{#if rows && rows.length > 0}
 						{#each rows[0] as entry}
-							<EditableCell bind:value={entry} isHeader=true/>
+							<th >
+							<EditableCell bind:value={entry}/>
+							</th>
 						{/each}
 					{/if}
 				</tr>
@@ -43,7 +50,9 @@
 					{#each rows.slice(1) as row}
 						<tr>
 							{#each row as entry}
-								<EditableCell bind:value={entry}/>
+								<td >
+									<EditableCell bind:value={entry}/>
+								</td>
 							{/each}
 						</tr>
 					{/each}
