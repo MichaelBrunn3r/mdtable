@@ -1,5 +1,6 @@
 <script>
 	import EditableCell from './EditableCell.svelte';
+	import ResizeTableButton from './ResizeTableButton.svelte';
 
 	export let header = ["Tables", "Are", "Cool"];
 	export let rows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
@@ -8,6 +9,11 @@
 		let row = new Array(header.length);
 		row.fill('')
 		rows.push(row)
+		rows = rows;
+	}
+
+	function removeRow() {
+		rows.pop();
 		rows = rows;
 	}
 
@@ -22,6 +28,15 @@
 		rows = rows;
 	}
 
+	function removeColumn() {
+		header.pop();
+		header = header;
+
+		for(let i=0; i<rows.length; i++) {
+			rows[i].pop();
+		}
+		rows = rows;
+	}
 </script>
 
 <style>
@@ -30,13 +45,6 @@
 	}
 	tr {
 		height: 35px;
-	}
-
-	button {
-		font-size: 20px;
-		border: none;
-		background: none;
-		padding: 0 8px;
 	}
 
 	.wrapper-horizontal {
@@ -49,10 +57,6 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-	}
-
-	#btn-add-col {
-		margin-bottom: 30px;
 	}
 </style>
 
@@ -76,7 +80,7 @@
 				{/each}
 			</tbody>
 		</table>
-		<button type="button" class="btn" on:click={addRow}><i class="far fa-plus-square"></i></button>
+		<ResizeTableButton on:resizePositve={addRow} on:resizeNegative={removeRow} />
 	</div>
-	<button id="btn-add-col" type="button" class="btn" on:click={addColumn}><i class="far fa-plus-square"></i></button>
+	<ResizeTableButton direction="horizontal" on:resizePositve={addColumn} on:resizeNegative={removeColumn}/>
 </div>
