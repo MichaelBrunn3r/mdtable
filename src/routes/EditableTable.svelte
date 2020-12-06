@@ -1,9 +1,9 @@
 <script lang="ts">
-	import EditableCell from './EditableCell.svelte';
-	import ResizeTableButton from './ResizeTableButton.svelte';
 	import tableStore from './table-store';
+	import ResizeTableButton from './ResizeTableButton.svelte';
+	import EditableCell from './EditableCell.svelte';
 
-	let rows = tableStore.rows;
+	let rows = tableStore.rows();
 	tableStore.subscribeRows(storedRows => {
 		rows = storedRows;
 	})
@@ -35,7 +35,7 @@
 		grid-area: middle;
 		align-self: start;
 	}
-	thead tr {
+	tbody tr:first-child {
 		font-weight: 600;
 	}
 	tbody tr:nth-child(even) {
@@ -51,31 +51,17 @@
 
 <div class="grid">
 	<table>
-		<thead>
-			<tr>
-				{#if rows && rows.length > 0}
-					{#each rows[0] as entry, columnIdx}
+		<tbody>
+			{#each rows as row, rowIdx}
+				<tr>
+					{#each row as entry, columnIdx}
 						<EditableCell
 							bind:value={entry}
-							isSelected={selectedRow === 0 && selectedColumn === columnIdx}
-							on:clicked={() => selectCell(0,columnIdx)} />
+							isSelected={selectedRow === rowIdx && selectedColumn === columnIdx}
+							on:clicked={() => selectCell(rowIdx,columnIdx)} />
 					{/each}
-				{/if}
-			</tr>
-		</thead>
-		<tbody>
-			{#if rows && rows.length > 1}
-				{#each rows.slice(1) as row, rowIdx}
-					<tr>
-						{#each row as entry, columnIdx}
-							<EditableCell
-								bind:value={entry}
-								isSelected={selectedRow === rowIdx+1 && selectedColumn === columnIdx}
-								on:clicked={() => selectCell(rowIdx+1,columnIdx)} />
-						{/each}
-					</tr>
-				{/each}
-			{/if}
+				</tr>
+			{/each}
 		</tbody>
 	</table>
 	<div class="resize-wrapper">
