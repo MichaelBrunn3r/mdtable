@@ -1,42 +1,12 @@
 <script>
 	import EditableCell from './EditableCell.svelte';
 	import ResizeTableButton from './ResizeTableButton.svelte';
+	import tableStore from './table-store';
 
-	export let header = ["Tables", "Are", "Cool"];
-	export let rows = [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9']];
-
-	function addRow() {
-		let row = new Array(header.length);
-		row.fill('')
-		rows.push(row)
-		rows = rows;
-	}
-
-	function removeRow() {
-		rows.pop();
-		rows = rows;
-	}
-
-	function addColumn() {
-		header.push('');
-		header = header;
-
-		for(let i=0; i<rows.length; i++) {
-			rows[i].push('');
-		}
-
-		rows = rows;
-	}
-
-	function removeColumn() {
-		header.pop();
-		header = header;
-
-		for(let i=0; i<rows.length; i++) {
-			rows[i].pop();
-		}
-		rows = rows;
-	}
+	let rows = tableStore.rows;
+	tableStore.subscribeRows(storedRows => {
+		rows = storedRows;
+	})
 </script>
 
 <style>
@@ -61,21 +31,25 @@
 		<table>
 			<thead>
 				<tr>
-					{#each header as entry,i}
-						<EditableCell bind:value={entry} isHeader=true/>
-					{/each}
+					{#if rows && rows.length > 0}
+						{#each rows[0] as entry}
+							<EditableCell bind:value={entry} isHeader=true/>
+						{/each}
+					{/if}
 				</tr>
 			</thead>
 			<tbody>
-				{#each rows as row,i}
-					<tr>
-						{#each row as entry,k}
-							<EditableCell bind:value={entry}/>
-						{/each}
-					</tr>
-				{/each}
+				{#if rows && rows.length > 1}
+					{#each rows.slice(1) as row}
+						<tr>
+							{#each row as entry}
+								<EditableCell bind:value={entry}/>
+							{/each}
+						</tr>
+					{/each}
+				{/if}
 			</tbody>
 		</table>
-		<ResizeTableButton on:resizeH+={addColumn} on:resizeH-={removeColumn} on:resizeV+={addRow} on:resizeV-={removeRow}/>
+		<ResizeTableButton on:resizeH+={tableStore.addColumn} on:resizeH-={tableStore.removeColumn} on:resizeV+={tableStore.addRow} on:resizeV-={tableStore.removeRow}/>
 	</div>
 </div>
