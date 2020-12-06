@@ -44,13 +44,11 @@
 
 <style>
 	i {
+		padding: 2px;
 		font-size: 1rem;
-		padding: 0 8px;
-		position: absolute;
-		bottom: 0px;
-		right: 0px;
 		transform: scaleX(-1);
 		cursor: nwse-resize;
+		display: block;
 	}
 </style>
 
