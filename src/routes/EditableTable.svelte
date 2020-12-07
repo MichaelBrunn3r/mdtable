@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Selection } from './selection';
 
-	let selection = new Selection(-1,-1,-1,-1);
+	let selection: Selection;
 	let isSelecting = false;
 	let mouseUpListener;
 
@@ -155,10 +155,10 @@
 				<!-- Row content -->
 				{#each row as cell, columnIdx}
 					<td class="cell"
-						class:selection-top={selection.isTopEdge(rowIdx, columnIdx)}
-						class:selection-bottom={selection.isBottomEdge(rowIdx, columnIdx)}
-						class:selection-left={selection.isLeftEdge(rowIdx, columnIdx)}
-						class:selection-right={selection.isRightEdge(rowIdx, columnIdx)}
+						class:selection-top={selection?.atTopEdge(rowIdx, columnIdx)}
+						class:selection-bottom={selection?.atBottomEdge(rowIdx, columnIdx)}
+						class:selection-left={selection?.atLeftEdge(rowIdx, columnIdx)}
+						class:selection-right={selection?.atRightEdge(rowIdx, columnIdx)}
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
 						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
 						{cell}
