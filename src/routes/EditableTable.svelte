@@ -34,6 +34,18 @@
 			)
 		}
 	}
+
+	function selectRow(rowIdx: number) {
+		selection = new Selection(rowIdx, 0, rowIdx, rows[0].length-1);
+	}
+
+	function selectColumn(columnIdx: number) {
+		selection = new Selection(0, columnIdx, rows.length-1, columnIdx);
+	}
+
+	function selectAll() {
+		selection = new Selection(0, 0, rows.length-1, rows[0].length-1);
+	}
 </script>
 
 <style lang="scss">
@@ -43,6 +55,7 @@
 	$cell-selected-border-color: rgb(55, 53, 59);
 	$aux-border-color: rgb(214, 212, 212);
 	$aux-bg-color: rgb(231, 231, 231);
+	$aux-hover-bg-color: rgb(226, 213, 213);
 
 	.wrapper {
 		display: grid;
@@ -90,6 +103,11 @@
 		font-size: 0.8rem;
 		background-color: $aux-bg-color;
 		padding: 0;
+		user-select: none;
+
+		&:hover {
+			background-color: $aux-hover-bg-color;
+		}
 	}
 	.aux-cell-top {
 		height: 20px;
@@ -109,19 +127,28 @@
 
 <div class="wrapper">
 	<table>
-		<!-- Top aux row -->
 		<tr class="aux-wrapper-top">
-			<td class="aux-cell aux-cell-corner"></td>
+			<!-- Corner aux -->
+			<td class="aux-cell aux-cell-corner"
+				on:click={() => selectAll()}></td>
+
+			<!-- Top aux -->
 			{#each rows[0] as _, columnIdx}
-				<td class="aux-cell aux-cell-top">{columnIdx+1}</td>
+				<td class="aux-cell aux-cell-top"
+					on:mousedown={() => selectColumn(columnIdx)}>
+					{columnIdx+1}
+			</td>
 			{/each}
 		</tr>
 
 		<!-- Table content -->
 		{#each rows as row, rowIdx}
 			<tr>
-				<!-- Row aux -->
-				<td class="aux-cell aux-cell-left">{rowIdx+1}</td>
+				<!-- Left aux -->
+				<td class="aux-cell aux-cell-left"
+					on:mousedown={() => selectRow(rowIdx)}>
+					{rowIdx+1}
+				</td>
 
 				<!-- Row content -->
 				{#each row as cell, columnIdx}
@@ -131,8 +158,9 @@
 						class:selection-left={selection.isLeftEdge(rowIdx, columnIdx)}
 						class:selection-right={selection.isRightEdge(rowIdx, columnIdx)}
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
-						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}
-						>{cell}</td>
+						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
+						{cell}
+					</td>
 				{/each}
 			</tr>
 		{/each}
