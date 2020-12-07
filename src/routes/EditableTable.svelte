@@ -3,7 +3,12 @@
 
 	let selection: Selection;
 	let isSelecting = false;
-	let mouseUpListener;
+
+	// Document listeners
+	let mouseUpListener = () => {
+		isSelecting = false;
+		document.removeEventListener('mouseup', mouseUpListener);
+	}
 
 	let rows = [
 		['1', '2', '3', '4', '5'],
@@ -16,24 +21,12 @@
 	function onCellMouseDown(rowIdx: number, columnIdx: number) {
 		selection = new Selection(rowIdx, columnIdx, rowIdx, columnIdx);
 		isSelecting = true;
-
-		mouseUpListener = () => {
-			isSelecting = false;
-			document.removeEventListener('mouseup', mouseUpListener);
-			mouseUpListener = undefined;
-		}
-
 		document.addEventListener('mouseup', mouseUpListener)
 	}
 
 	function onCellMouseOver(rowIdx: number, columnIdx: number) {
 		if(isSelecting) {
-			selection = new Selection(
-				selection.startPos.rowIdx,
-				selection.startPos.columnIdx,
-				rowIdx,
-				columnIdx
-			)
+			selection = selection.setEndPos(rowIdx, columnIdx)
 		}
 	}
 
@@ -47,6 +40,19 @@
 
 	function selectAll() {
 		selection = new Selection(0, 0, rows.length-1, rows[0].length-1);
+	}
+
+	function handleKeydown(e) {
+		const key = e.key;
+		if(key === 'ArrowUp') {
+			selection = selection.collapse().translate(-1,0).constrain(0,0,rows.length-1,rows[0].length-1);
+		} else if(key === 'ArrowDown') {
+			selection = selection.collapse().translate(1,0).constrain(0,0,rows.length-1,rows[0].length-1);
+		} else if(key === 'ArrowLeft') {
+			selection = selection.collapse().translate(0,-1).constrain(0,0,rows.length-1,rows[0].length-1);
+		} else if(key === 'ArrowRight') {
+			selection = selection.collapse().translate(0,1).constrain(0,0,rows.length-1,rows[0].length-1);
+		}
 	}
 </script>
 
@@ -126,6 +132,8 @@
 		border-bottom: $cell-border-width solid $aux-border-color;
 	}
 </style>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <div class="wrapper">
 	<table>
