@@ -1,40 +1,9 @@
 <script lang="ts">
-	class Selection {
-		startRow = 0;
-		startColumn = 0;
-		endRow = 0;
-		endColumn = 0;
+	import { Selection } from './selection';
 
-		select(startRow: number, startColumn: number, endRow: number, endColumn: number) {
-			this.startRow = startRow;
-			this.endRow = endRow;
-			this.startColumn = startColumn;
-			this.endColumn = endColumn;
-		}
+	let selection = new Selection(-1,-1,-1,-1);
+	let isSelecting = false;
 
-		isSelected(rowIdx: number, columnIdx: number) {
-			return rowIdx >= this.startRow && rowIdx <= this.endRow
-					&& columnIdx >= this.startColumn && columnIdx <= this.endColumn;
-		}
-
-		isSelectionTop(rowIdx: number, columnIdx: number) {
-			return this.isSelected(rowIdx, columnIdx) && rowIdx === this.startRow;
-		}
-
-		isSelectionBottom(rowIdx: number, columnIdx: number) {
-			return this.isSelected(rowIdx, columnIdx) && rowIdx === this.endRow;
-		}
-
-		isSelectionLeft(rowIdx: number, columnIdx: number) {
-			return this.isSelected(rowIdx, columnIdx) && columnIdx === this.startColumn;
-		}
-
-		isSelectionRight(rowIdx: number, columnIdx: number) {
-			return this.isSelected(rowIdx, columnIdx) && columnIdx === this.endColumn;
-		}
-	}
-
-	let selection = new Selection();
 	let rows = [
 		['1', '2', '3', '4', '5'],
 		['1', '2', '3', '4', '5'],
@@ -42,12 +11,35 @@
 		['1', '2', '3', '4', '5'],
 		['1', '2', '3', '4', '5'],
 	]
+
+	function onCellMouseDown(rowIdx: number, columnIdx: number) {
+		selection = new Selection(rowIdx, columnIdx, rowIdx, columnIdx);
+		isSelecting = true;
+
+		const onMouseUp = () => {
+			isSelecting = false;
+			document.removeEventListener('mouseup', onMouseUp);
+		}
+
+		document.addEventListener('mouseup', onMouseUp)
+	}
+
+	function onCellMouseOver(rowIdx: number, columnIdx: number) {
+		if(isSelecting) {
+			selection = new Selection(
+				selection.startPos.rowIdx,
+				selection.startPos.columnIdx,
+				rowIdx,
+				columnIdx
+			)
+		}
+	}
 </script>
 
 <style lang="scss">
 	$cell-border-color: rgb(187, 179, 179);
 	$cell-border-width: 0.5px;
-	$cell-selected-border-width: 2px;
+	$cell-selected-border-width: 1.8px;
 	$cell-selected-border-color: rgb(55, 53, 59);
 	$aux-border-color: rgb(214, 212, 212);
 	$aux-bg-color: rgb(231, 231, 231);
@@ -134,10 +126,12 @@
 				<!-- Row content -->
 				{#each row as cell, columnIdx}
 					<td class="cell"
-						class:selection-top={selection.isSelectionTop(rowIdx, columnIdx)}
-						class:selection-bottom={selection.isSelectionBottom(rowIdx, columnIdx)}
-						class:selection-left={selection.isSelectionLeft(rowIdx, columnIdx)}
-						class:selection-right={selection.isSelectionRight(rowIdx, columnIdx)}
+						class:selection-top={selection.isTopEdge(rowIdx, columnIdx)}
+						class:selection-bottom={selection.isBottomEdge(rowIdx, columnIdx)}
+						class:selection-left={selection.isLeftEdge(rowIdx, columnIdx)}
+						class:selection-right={selection.isRightEdge(rowIdx, columnIdx)}
+						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
+						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}
 						>{cell}</td>
 				{/each}
 			</tr>
