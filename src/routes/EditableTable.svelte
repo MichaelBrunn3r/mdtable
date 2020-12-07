@@ -8,7 +8,12 @@
 	]
 </script>
 
-<style>
+<style lang="scss">
+	$cell-border-color: rgb(187, 179, 179);
+	$cell-border-width: 0.5px;
+	$aux-border-color: rgb(214, 212, 212);
+	$aux-bg-color: rgb(231, 231, 231);
+
 	.wrapper {
 		display: grid;
 		align-content: stretch;
@@ -19,43 +24,51 @@
 		margin: 0;
 		padding: 0;
 		table-layout: auto;
+
+		tr:nth-child(odd) {
+			background-color: #f6f8fa;
+		}
 	}
+
 	tr {
 		margin: 0;
 		padding: 0;
-	}
-	table tr:nth-child(odd) {
-		background-color: #f6f8fa;
 	}
 	.cell {
 		min-width: 40px;
 		width: min-content;
 		min-height: 20px;
-		border-right: 0.5px solid rgb(187, 179, 179);
-		border-bottom: 0.5px solid rgb(187, 179, 179);
+		border-right: $cell-border-width solid $cell-border-color;
+		border-bottom: $cell-border-width solid $cell-border-color;
 	}
 
 	/* Aux */
 	.aux-cell {
 		text-align: center;
 		font-size: 0.8rem;
-		background-color: rgb(231, 231, 231);
-		border-right: 0.5px solid rgb(187, 179, 179);
-		border-bottom: 0.5px solidrgb(187, 179, 179);
+		background-color: $aux-bg-color;
 		padding: 0;
 	}
 	.aux-cell-top {
 		height: 20px;
+		border-right: $cell-border-width solid $aux-border-color;
+		border-bottom: $cell-border-width solid $cell-border-color;
 	}
 	.aux-cell-left {
 		width: 20px;
+		border-right: $cell-border-width solid $cell-border-color;
+		border-bottom: $cell-border-width solid $aux-border-color;
+	}
+	.aux-cell-corner {
+		border-right: $cell-border-width solid $aux-border-color;
+		border-bottom: $cell-border-width solid $aux-border-color;
 	}
 </style>
 
 <div class="wrapper">
 	<table>
 		<tr class="aux-wrapper-top">
-			<td class="aux-cell aux-cell-top"></td>
+			<td class="aux-cell aux-cell-corner"></td>
 			{#each rows[0] as _, columnIdx}
 				<td class="aux-cell aux-cell-top">{columnIdx+1}</td>
 			{/each}
