@@ -3,6 +3,7 @@
 
 	let selection = new Selection(-1,-1,-1,-1);
 	let isSelecting = false;
+	let mouseUpListener;
 
 	let rows = [
 		['1', '2', '3', '4', '5'],
@@ -16,12 +17,13 @@
 		selection = new Selection(rowIdx, columnIdx, rowIdx, columnIdx);
 		isSelecting = true;
 
-		const onMouseUp = () => {
+		mouseUpListener = () => {
 			isSelecting = false;
-			document.removeEventListener('mouseup', onMouseUp);
+			document.removeEventListener('mouseup', mouseUpListener);
+			mouseUpListener = undefined;
 		}
 
-		document.addEventListener('mouseup', onMouseUp)
+		document.addEventListener('mouseup', mouseUpListener)
 	}
 
 	function onCellMouseOver(rowIdx: number, columnIdx: number) {
