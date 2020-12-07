@@ -1,70 +1,73 @@
 <script lang="ts">
-	import tableStore from './table-store';
-	import ResizeTableButton from './ResizeTableButton.svelte';
-	import EditableCell from './EditableCell.svelte';
-
-	let rows = tableStore.rows();
-	tableStore.subscribeRows(storedRows => {
-		rows = storedRows;
-	})
-
-	let selectedRow: number = undefined;
-	let selectedColumn: number = undefined;
-
-	function selectCell(row: number, column: number) {
-		selectedRow = row;
-		selectedColumn = column;
-	}
+	let rows = [
+		['1', '2', '3', '4', '5'],
+		['1', '2', '3', '4', '5'],
+		['1', '2', '3', '4', '5'],
+		['1', '2', '3', '4', '5'],
+		['1', '2', '3', '4', '5'],
+	]
 </script>
 
 <style>
-	.grid {
+	.wrapper {
 		display: grid;
-		grid-template-areas:
-			"tlcorner top trcorner"
-			"left middle right"
-			"blcorner bottom brcorner"
-			;
-		justify-content: center;
-
-		height: fit-content;
+		align-content: stretch;
 	}
 
 	/* Table */
 	table {
-		grid-area: middle;
-		align-self: start;
+		margin: 0;
+		padding: 0;
+		table-layout: auto;
 	}
-	tbody tr:first-child {
-		font-weight: 600;
+	tr {
+		margin: 0;
+		padding: 0;
 	}
-	tbody tr:nth-child(even) {
+	table tr:nth-child(odd) {
 		background-color: #f6f8fa;
 	}
+	.cell {
+		min-width: 40px;
+		width: min-content;
+		min-height: 20px;
+		border-right: 0.5px solid rgb(187, 179, 179);
+		border-bottom: 0.5px solid rgb(187, 179, 179);
+	}
 
-	/* Resize button */
-	.resize-wrapper {
-		grid-area: brcorner;
-		justify-self: center;
+	/* Aux */
+	.aux-cell {
+		text-align: center;
+		font-size: 0.8rem;
+		background-color: rgb(231, 231, 231);
+		border-right: 0.5px solid rgb(187, 179, 179);
+		border-bottom: 0.5px solidrgb(187, 179, 179);
+		padding: 0;
+	}
+	.aux-cell-top {
+		height: 20px;
+	}
+	.aux-cell-left {
+		width: 20px;
 	}
 </style>
 
-<div class="grid">
+<div class="wrapper">
 	<table>
-		<tbody>
-			{#each rows as row, rowIdx}
-				<tr>
-					{#each row as entry, columnIdx}
-						<EditableCell
-							bind:value={entry}
-							isSelected={selectedRow === rowIdx && selectedColumn === columnIdx}
-							on:clicked={() => selectCell(rowIdx,columnIdx)} />
-					{/each}
-				</tr>
+		<tr class="aux-wrapper-top">
+			<td class="aux-cell aux-cell-top"></td>
+			{#each rows[0] as _, columnIdx}
+				<td class="aux-cell aux-cell-top">{columnIdx+1}</td>
 			{/each}
-		</tbody>
+		</tr>
+
+		{#each rows as row, rowIdx}
+			<tr>
+			<td class="aux-cell aux-cell-left">{rowIdx+1}</td>
+				{#each row as cell }
+					<td class="cell">{cell}</td>
+				{/each}
+			</tr>
+		{/each}
 	</table>
-	<div class="resize-wrapper">
-		<ResizeTableButton on:resizeH+={tableStore.addColumn} on:resizeH-={tableStore.removeColumn} on:resizeV+={tableStore.addRow} on:resizeV-={tableStore.removeRow}/>
-	</div>
 </div>
