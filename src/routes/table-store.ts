@@ -19,7 +19,7 @@ const tableStore = getableStore([
 const numRowsStore = getableStore(12);
 const numColumnsStore = getableStore(4);
 
-function addRow() {
+export function addRow() {
 	tableStore.update(rows => {
 		let row: Array<string> = new Array(numColumnsStore.get());
 		row.fill('')
@@ -29,7 +29,7 @@ function addRow() {
 	numRowsStore.update(n => n+1);
 }
 
-function addColumn() {
+export function addColumn() {
 	tableStore.update(rows => {
 		for(let i=0; i<rows.length; i++) {
 			rows[i].push('');
@@ -39,7 +39,7 @@ function addColumn() {
 	numColumnsStore.update(n => n+1);
 }
 
-function removeRow() {
+export function removeRow() {
 	if(numRowsStore.get() > 1) {
 		tableStore.update(rows => {
 			rows.pop();
@@ -49,7 +49,7 @@ function removeRow() {
 	}
 }
 
-function removeColumn() {
+export function removeColumn() {
 	if(numColumnsStore.get() > 1) {
 		tableStore.update(rows => {
 			for(let i=0; i<numRowsStore.get(); i++) {
@@ -61,12 +61,24 @@ function removeColumn() {
 	}
 }
 
+export function selectRow(rowIdx: number) {
+	selection.set(new Rect(0, rowIdx, numColumnsStore.get()-1, rowIdx));
+}
+
+export function selectColumn(columnIdx: number) {
+	selection.set(new Rect(columnIdx, 0, columnIdx, numRowsStore.get()-1));
+}
+
+export function selectAll() {
+	selection.set(new Rect(0, 0, numColumnsStore.get()-1, numRowsStore.get()-1));
+}
+
+export function selectCell(columnIdx: number, rowIdx: number) {
+	selection.set(new Rect(columnIdx, rowIdx, columnIdx, rowIdx));
+}
+
 export {
 	tableStore,
 	numRowsStore as numRows,
-	numColumnsStore as numColumns,
-	addRow,
-	addColumn,
-	removeRow,
-	removeColumn
+	numColumnsStore as numColumns
 }
