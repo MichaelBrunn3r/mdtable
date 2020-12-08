@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tableStore as _table, selection } from './table-store';
+	import { tableStore as _table, selection } from '../data/table-store';
 
 	let isSelecting = false;
 
