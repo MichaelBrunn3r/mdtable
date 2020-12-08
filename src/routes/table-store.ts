@@ -1,5 +1,7 @@
 import { getableStore } from './utils';
+import { Selection } from './selection';
 
+export const selection = getableStore(new Selection(-1,-1,-1,-1));
 const tableStore = getableStore([
 	['1','2','3','4'],
 	['1','2','3','4'],

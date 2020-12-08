@@ -1,6 +1,6 @@
 import {constrain} from './utils';
 
-class CellPosition {
+export class CellPosition {
 	rowIdx: number;
 	columnIdx: number;
 
@@ -10,7 +10,7 @@ class CellPosition {
 	}
 }
 
-class Selection {
+export class Selection {
 	startPos: CellPosition;
 	endPos: CellPosition;
 
@@ -94,9 +94,4 @@ class Selection {
 	atRightEdge(rowIdx: number, columnIdx: number) {
 		return this.contains(rowIdx, columnIdx) && columnIdx === Math.max(this.startPos.columnIdx, this.endPos.columnIdx);
 	}
-}
-
-export {
-	CellPosition,
-	Selection
 }

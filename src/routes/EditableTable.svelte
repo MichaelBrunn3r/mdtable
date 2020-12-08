@@ -1,8 +1,7 @@
 <script lang="ts">
+	import { tableStore as _table, numRows, numColumns, selection } from './table-store';
 	import { Selection } from './selection';
-	import { tableStore as _table, numRows, numColumns, addColumn, addRow, removeRow, removeColumn } from './table-store';
 
-	let selection: Selection;
 	let isSelecting = false;
 
 	// Document listeners
@@ -12,39 +11,39 @@
 	}
 
 	function onCellMouseDown(rowIdx: number, columnIdx: number) {
-		selection = new Selection(rowIdx, columnIdx, rowIdx, columnIdx);
+		selection.set(new Selection(rowIdx, columnIdx, rowIdx, columnIdx))
 		isSelecting = true;
 		document.addEventListener('mouseup', mouseUpListener)
 	}
 
 	function onCellMouseOver(rowIdx: number, columnIdx: number) {
 		if(isSelecting) {
-			selection = selection.setEndPos(rowIdx, columnIdx)
+			selection.update(s => s.setEndPos(rowIdx, columnIdx))
 		}
 	}
 
 	function selectRow(rowIdx: number) {
-		selection = new Selection(rowIdx, 0, rowIdx, numColumns.get()-1);
+		selection.set(new Selection(rowIdx, 0, rowIdx, numColumns.get()-1));
 	}
 
 	function selectColumn(columnIdx: number) {
-		selection = new Selection(0, columnIdx, numRows.get()-1, columnIdx);
+		selection.set(new Selection(0, columnIdx, numRows.get()-1, columnIdx));
 	}
 
 	function selectAll() {
-		selection = new Selection(0, 0, numRows.get()-1, numColumns.get()-1);
+		selection.set(new Selection(0, 0, numRows.get()-1, numColumns.get()-1));
 	}
 
 	function handleKeydown(e) {
 		const key = e.key;
 		if(key === 'ArrowUp') {
-			selection = selection.collapse().translate(-1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1);
+			selection.update(s => s.collapse().translate(-1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1))
 		} else if(key === 'ArrowDown') {
-			selection = selection.collapse().translate(1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1);
+			selection.update(s => s.collapse().translate(1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1))
 		} else if(key === 'ArrowLeft') {
-			selection = selection.collapse().translate(0,-1).constrain(0,0,numRows.get()-1,numColumns.get()-1);
+			selection.update(s => s.collapse().translate(0,-1).constrain(0,0,numRows.get()-1,numColumns.get()-1))
 		} else if(key === 'ArrowRight') {
-			selection = selection.collapse().translate(0,1).constrain(0,0,numRows.get()-1,numColumns.get()-1);
+			selection.update(s => s.collapse().translate(0,1).constrain(0,0,numRows.get()-1,numColumns.get()-1))
 		}
 	}
 </script>
@@ -158,10 +157,10 @@
 				<!-- Row content -->
 				{#each row as cell, columnIdx}
 					<td class="cell"
-						class:selection-top={selection?.atTopEdge(rowIdx, columnIdx)}
-						class:selection-bottom={selection?.atBottomEdge(rowIdx, columnIdx)}
-						class:selection-left={selection?.atLeftEdge(rowIdx, columnIdx)}
-						class:selection-right={selection?.atRightEdge(rowIdx, columnIdx)}
+						class:selection-top={$selection.atTopEdge(rowIdx, columnIdx)}
+						class:selection-bottom={$selection.atBottomEdge(rowIdx, columnIdx)}
+						class:selection-left={$selection.atLeftEdge(rowIdx, columnIdx)}
+						class:selection-right={$selection.atRightEdge(rowIdx, columnIdx)}
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
 						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
 						{cell}
