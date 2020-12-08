@@ -1,7 +1,7 @@
 import { getableStore } from './utils';
-import { Selection } from './selection';
+import { Rect } from './geometry';
 
-export const selection = getableStore(new Selection(-1,-1,-1,-1));
+export const selection = getableStore(new Rect(-1,-1,-1,-1));
 const tableStore = getableStore([
 	['1','2','3','4'],
 	['1','2','3','4'],
