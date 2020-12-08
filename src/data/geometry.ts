@@ -50,6 +50,14 @@ export class Rect {
 		return this;
 	}
 
+	constrainToRect(rect: Rect) {
+		this.startPos.x = constrain(this.startPos.x, rect.startPos.x, rect.endPos.x);
+		this.startPos.y = constrain(this.startPos.y, rect.startPos.y, rect.endPos.y);
+		this.endPos.x = constrain(this.endPos.x, rect.startPos.x, rect.endPos.x);
+		this.endPos.y = constrain(this.endPos.y,rect.startPos.y, rect.endPos.y);
+		return this;
+	}
+
 	setEndPos(x: number, y: number) {
 		this.endPos = new Position(x, y);
 		return this;

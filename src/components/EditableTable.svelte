@@ -24,13 +24,13 @@
 	function handleKeydown(e) {
 		const key = e.key;
 		if(key === 'ArrowUp') {
-			selection.update(s => s.collapse().translate(0,-1).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
+			selection.moveUp();
 		} else if(key === 'ArrowDown') {
-			selection.update(s => s.collapse().translate(0,1).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
+			selection.moveDown();
 		} else if(key === 'ArrowLeft') {
-			selection.update(s => s.collapse().translate(-1,0).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
+			selection.moveLeft();
 		} else if(key === 'ArrowRight') {
-			selection.update(s => s.collapse().translate(1,0).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
+			selection.moveRight();
 		}
 	}
 
