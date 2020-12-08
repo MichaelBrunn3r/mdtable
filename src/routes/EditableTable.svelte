@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Selection } from './selection';
+	import { tableStore as _table, numRows, numColumns, addColumn, addRow, removeRow, removeColumn } from './table-store';
 
 	let selection: Selection;
 	let isSelecting = false;
@@ -9,14 +10,6 @@
 		isSelecting = false;
 		document.removeEventListener('mouseup', mouseUpListener);
 	}
-
-	let rows = [
-		['1', '2', '3', '4', '5'],
-		['1', '2', '3', '4', '5'],
-		['1', '2', '3', '4', '5'],
-		['1', '2', '3', '4', '5'],
-		['1', '2', '3', '4', '5'],
-	]
 
 	function onCellMouseDown(rowIdx: number, columnIdx: number) {
 		selection = new Selection(rowIdx, columnIdx, rowIdx, columnIdx);
@@ -31,27 +24,27 @@
 	}
 
 	function selectRow(rowIdx: number) {
-		selection = new Selection(rowIdx, 0, rowIdx, rows[0].length-1);
+		selection = new Selection(rowIdx, 0, rowIdx, numColumns.get()-1);
 	}
 
 	function selectColumn(columnIdx: number) {
-		selection = new Selection(0, columnIdx, rows.length-1, columnIdx);
+		selection = new Selection(0, columnIdx, numRows.get()-1, columnIdx);
 	}
 
 	function selectAll() {
-		selection = new Selection(0, 0, rows.length-1, rows[0].length-1);
+		selection = new Selection(0, 0, numRows.get()-1, numColumns.get()-1);
 	}
 
 	function handleKeydown(e) {
 		const key = e.key;
 		if(key === 'ArrowUp') {
-			selection = selection.collapse().translate(-1,0).constrain(0,0,rows.length-1,rows[0].length-1);
+			selection = selection.collapse().translate(-1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1);
 		} else if(key === 'ArrowDown') {
-			selection = selection.collapse().translate(1,0).constrain(0,0,rows.length-1,rows[0].length-1);
+			selection = selection.collapse().translate(1,0).constrain(0,0,numRows.get()-1,numColumns.get()-1);
 		} else if(key === 'ArrowLeft') {
-			selection = selection.collapse().translate(0,-1).constrain(0,0,rows.length-1,rows[0].length-1);
+			selection = selection.collapse().translate(0,-1).constrain(0,0,numRows.get()-1,numColumns.get()-1);
 		} else if(key === 'ArrowRight') {
-			selection = selection.collapse().translate(0,1).constrain(0,0,rows.length-1,rows[0].length-1);
+			selection = selection.collapse().translate(0,1).constrain(0,0,numRows.get()-1,numColumns.get()-1);
 		}
 	}
 </script>
@@ -68,6 +61,7 @@
 	.wrapper {
 		display: grid;
 		align-content: stretch;
+		padding-right: 0.01px; // Counteract selection border
 	}
 
 	/* Table */
@@ -87,8 +81,8 @@
 	}
 	.cell {
 		min-width: 40px;
-		width: min-content;
-		min-height: 20px;
+		min-height: 25px;
+		height: 25px;
 		border: $cell-border-width solid $cell-border-color;
 		cursor: cell;
 
@@ -123,6 +117,7 @@
 		border-bottom: $cell-border-width solid $cell-border-color;
 	}
 	.aux-cell-left {
+		min-width: 20px;
 		width: 20px;
 		border-right: $cell-border-width solid $cell-border-color;
 		border-bottom: $cell-border-width solid $aux-border-color;
@@ -143,7 +138,7 @@
 				on:click={() => selectAll()}></td>
 
 			<!-- Top aux -->
-			{#each rows[0] as _, columnIdx}
+			{#each Array($numColumns) as _, columnIdx}
 				<td class="aux-cell aux-cell-top"
 					on:mousedown={() => selectColumn(columnIdx)}>
 					{columnIdx+1}
@@ -152,7 +147,7 @@
 		</tr>
 
 		<!-- Table content -->
-		{#each rows as row, rowIdx}
+		{#each $_table as row, rowIdx}
 			<tr>
 				<!-- Left aux -->
 				<td class="aux-cell aux-cell-left"

@@ -1,58 +1,68 @@
-import { writable } from 'writable-store/dist/index.js';
+import { getableStore } from './utils';
 
-const rowsStore = writable<Array<Array<string>>>([['','',''],['','',''],['','','']]);
-const numRowsStore = writable(3);
-const numColsStore = writable(3);
-
-rowsStore.subscribe(rows => {
-	numRowsStore.set(() => rows.length);
-	numColsStore.set(() => rows[0].length);
-})
+const tableStore = getableStore([
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','asdasdasdasdasdasd'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4']
+]);
+const numRowsStore = getableStore(12);
+const numColumnsStore = getableStore(4);
 
 function addRow() {
-	rowsStore.set(rows => {
-		let row: Array<string> = new Array(numColsStore.get());
+	tableStore.update(rows => {
+		let row: Array<string> = new Array(numColumnsStore.get());
 		row.fill('')
 		rows.push(row)
 		return rows;
 	})
+	numRowsStore.update(n => n+1);
 }
 
 function addColumn() {
-	rowsStore.set(rows => {
+	tableStore.update(rows => {
 		for(let i=0; i<rows.length; i++) {
 			rows[i].push('');
 		}
 		return rows;
 	})
+	numColumnsStore.update(n => n+1);
 }
 
 function removeRow() {
 	if(numRowsStore.get() > 1) {
-		rowsStore.set(rows => {
+		tableStore.update(rows => {
 			rows.pop();
 			return rows;
 		})
+		numRowsStore.update(n => n+1);
 	}
 }
 
 function removeColumn() {
-	if(numColsStore.get() > 1) {
-		rowsStore.set(rows => {
+	if(numColumnsStore.get() > 1) {
+		tableStore.update(rows => {
 			for(let i=0; i<numRowsStore.get(); i++) {
 				rows[i].pop();
 			}
 			return rows;
 		})
+		numColumnsStore.update(n => n-1);
 	}
 }
 
-export default {
-	subscribeRows: rowsStore.subscribe,
-	rows: rowsStore.get(),
-	numRows: numRowsStore.get(),
-	numCols: numColsStore.get(),
-
+export {
+	tableStore,
+	numRowsStore as numRows,
+	numColumnsStore as numColumns,
 	addRow,
 	addColumn,
 	removeRow,
