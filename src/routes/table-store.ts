@@ -1,7 +1,6 @@
 import { getableStore } from './utils';
 import { Rect } from './geometry';
 
-export const selection = getableStore(new Rect(-1,-1,-1,-1));
 const tableStore = getableStore([
 	['1','2','3','4'],
 	['1','2','3','4'],
@@ -61,21 +60,22 @@ export function removeColumn() {
 	}
 }
 
-export function selectRow(rowIdx: number) {
-	selection.set(new Rect(0, rowIdx, numColumnsStore.get()-1, rowIdx));
+function createSelection() {
+	const s = getableStore(new Rect(-1,-1,-1,-1));
+
+	return {
+		subscribe: s.subscribe,
+		update: s.update,
+		set: s.set,
+		rect: s.get,
+		selectRow: (rowIdx: number) => s.set(new Rect(0, rowIdx, numColumnsStore.get()-1, rowIdx)),
+		selectColumn: (columnIdx: number) => s.set(new Rect(columnIdx, 0, columnIdx, numRowsStore.get()-1)),
+		selectAll: () => s.set(new Rect(0, 0, numColumnsStore.get()-1, numRowsStore.get()-1)),
+		selectCell: (columnIdx: number, rowIdx: number) => s.set(new Rect(columnIdx, rowIdx, columnIdx, rowIdx))
+	}
 }
 
-export function selectColumn(columnIdx: number) {
-	selection.set(new Rect(columnIdx, 0, columnIdx, numRowsStore.get()-1));
-}
-
-export function selectAll() {
-	selection.set(new Rect(0, 0, numColumnsStore.get()-1, numRowsStore.get()-1));
-}
-
-export function selectCell(columnIdx: number, rowIdx: number) {
-	selection.set(new Rect(columnIdx, rowIdx, columnIdx, rowIdx));
-}
+export const selection = createSelection();
 
 export {
 	tableStore,

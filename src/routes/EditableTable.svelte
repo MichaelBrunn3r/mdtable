@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tableStore as _table, numRows, numColumns, selection, selectRow, selectColumn, selectAll,selectCell } from './table-store';
+	import { tableStore as _table, numRows, numColumns, selection } from './table-store';
 
 	let isSelecting = false;
 
@@ -10,7 +10,7 @@
 	}
 
 	function onCellMouseDown(rowIdx: number, columnIdx: number) {
-		selectCell(columnIdx, rowIdx);
+		selection.selectCell(columnIdx, rowIdx);
 		isSelecting = true;
 		document.addEventListener('mouseup', mouseUpListener);
 	}
@@ -121,12 +121,12 @@
 		<tr class="aux-wrapper-top">
 			<!-- Corner aux -->
 			<td class="aux-cell aux-cell-corner"
-				on:click={() => selectAll()}></td>
+				on:click={() => selection.selectAll()}></td>
 
 			<!-- Top aux -->
 			{#each Array($numColumns) as _, columnIdx}
 				<td class="aux-cell aux-cell-top"
-					on:mousedown={() => selectColumn(columnIdx)}>
+					on:mousedown={() => selection.selectColumn(columnIdx)}>
 					{columnIdx+1}
 			</td>
 			{/each}
@@ -137,7 +137,7 @@
 			<tr>
 				<!-- Left aux -->
 				<td class="aux-cell aux-cell-left"
-					on:mousedown={() => selectRow(rowIdx)}>
+					on:mousedown={() => selection.selectRow(rowIdx)}>
 					{rowIdx+1}
 				</td>
 
