@@ -1,7 +1,35 @@
-import { getableStore } from './utils';
 import { Rect } from './geometry';
+import { writable, derived, get } from 'svelte/store';
 
-const tableStore = getableStore([
+class Table {
+	rows: string[][]
+	numRows: number
+	numColumns: number
+
+	constructor(rows: string[][], numColumns: number) {
+		this.rows = rows;
+		this.numRows = rows.length;
+		this.numColumns = numColumns;
+	}
+}
+
+function createTable(rows: string[][], numColumns: number) {
+	const t = writable(new Table(rows, numColumns));
+
+	return {
+		subscribe: t.subscribe,
+		set: t.set,
+		update: t.update,
+		numColumns: derived(t, () => get(t).numColumns),
+		numRows: derived(t, () => get(t).numRows),
+		addRow,
+		addColumn,
+		removeRow,
+		removeColumn
+	}
+}
+
+export const tableStore = createTable([
 	['1','2','3','4'],
 	['1','2','3','4'],
 	['1','2','3','4'],
@@ -14,71 +42,61 @@ const tableStore = getableStore([
 	['1','2','3','4'],
 	['1','2','3','4'],
 	['1','2','3','4']
-]);
-const numRowsStore = getableStore(12);
-const numColumnsStore = getableStore(4);
+],4);
 
-export function addRow() {
-	tableStore.update(rows => {
-		let row: Array<string> = new Array(numColumnsStore.get());
+function addRow() {
+	tableStore.update(table => {
+		let row: Array<string> = new Array(table.numColumns);
 		row.fill('')
-		rows.push(row)
-		return rows;
+
+		table.rows.push(row)
+		table.numRows++;
+		return table;
 	})
-	numRowsStore.update(n => n+1);
 }
 
-export function addColumn() {
-	tableStore.update(rows => {
-		for(let i=0; i<rows.length; i++) {
-			rows[i].push('');
-		}
-		return rows;
+function addColumn() {
+	tableStore.update(table => {
+		table.rows.forEach(row => row.push(''))
+		table.numColumns++;
+		return table;
 	})
-	numColumnsStore.update(n => n+1);
 }
 
-export function removeRow() {
-	if(numRowsStore.get() > 1) {
-		tableStore.update(rows => {
-			rows.pop();
-			return rows;
+function removeRow() {
+	if(get(tableStore).numRows > 1) {
+		tableStore.update(table => {
+			table.rows.pop();
+			table.numRows--;
+			return table;
 		})
-		numRowsStore.update(n => n+1);
 	}
 }
 
-export function removeColumn() {
-	if(numColumnsStore.get() > 1) {
-		tableStore.update(rows => {
-			for(let i=0; i<numRowsStore.get(); i++) {
-				rows[i].pop();
-			}
-			return rows;
+function removeColumn() {
+	if(get(tableStore).numColumns > 1) {
+		tableStore.update(table => {
+			table.rows.forEach(row => row.pop())
+			table.numColumns--;
+			return table;
 		})
-		numColumnsStore.update(n => n-1);
 	}
 }
+
+// Selection
 
 function createSelection() {
-	const s = getableStore(new Rect(-1,-1,-1,-1));
+	const s = writable(new Rect(-1,-1,-1,-1));
 
 	return {
 		subscribe: s.subscribe,
 		update: s.update,
 		set: s.set,
-		rect: s.get,
-		selectRow: (rowIdx: number) => s.set(new Rect(0, rowIdx, numColumnsStore.get()-1, rowIdx)),
-		selectColumn: (columnIdx: number) => s.set(new Rect(columnIdx, 0, columnIdx, numRowsStore.get()-1)),
-		selectAll: () => s.set(new Rect(0, 0, numColumnsStore.get()-1, numRowsStore.get()-1)),
+		selectRow: (rowIdx: number) => s.set(new Rect(0, rowIdx, get(tableStore.numColumns)-1, rowIdx)),
+		selectColumn: (columnIdx: number) => s.set(new Rect(columnIdx, 0, columnIdx, get(tableStore.numRows)-1)),
+		selectAll: () => s.set(new Rect(0, 0, get(tableStore.numColumns)-1, get(tableStore.numRows)-1)),
 		selectCell: (columnIdx: number, rowIdx: number) => s.set(new Rect(columnIdx, rowIdx, columnIdx, rowIdx))
 	}
 }
 
 export const selection = createSelection();
-
-export {
-	tableStore,
-	numRowsStore as numRows,
-	numColumnsStore as numColumns
-}

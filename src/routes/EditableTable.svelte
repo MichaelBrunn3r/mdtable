@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tableStore as _table, numRows, numColumns, selection } from './table-store';
+	import { tableStore as _table, selection } from './table-store';
 
 	let isSelecting = false;
 
@@ -24,15 +24,16 @@
 	function handleKeydown(e) {
 		const key = e.key;
 		if(key === 'ArrowUp') {
-			selection.update(s => s.collapse().translate(0,-1).constrain(0,0,numColumns.get()-1,numRows.get()-1));
+			selection.update(s => s.collapse().translate(0,-1).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
 		} else if(key === 'ArrowDown') {
-			selection.update(s => s.collapse().translate(0,1).constrain(0,0,numColumns.get()-1,numRows.get()-1));
+			selection.update(s => s.collapse().translate(0,1).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
 		} else if(key === 'ArrowLeft') {
-			selection.update(s => s.collapse().translate(-1,0).constrain(0,0,numColumns.get()-1,numRows.get()-1));
+			selection.update(s => s.collapse().translate(-1,0).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
 		} else if(key === 'ArrowRight') {
-			selection.update(s => s.collapse().translate(1,0).constrain(0,0,numColumns.get()-1,numRows.get()-1));
+			selection.update(s => s.collapse().translate(1,0).constrain(0,0,$_table.numColumns-1,$_table.numRows-1));
 		}
 	}
+
 </script>
 
 <style lang="scss">
@@ -124,7 +125,7 @@
 				on:click={() => selection.selectAll()}></td>
 
 			<!-- Top aux -->
-			{#each Array($numColumns) as _, columnIdx}
+			{#each Array($_table.numColumns) as _, columnIdx}
 				<td class="aux-cell aux-cell-top"
 					on:mousedown={() => selection.selectColumn(columnIdx)}>
 					{columnIdx+1}
@@ -133,7 +134,7 @@
 		</tr>
 
 		<!-- Table content -->
-		{#each $_table as row, rowIdx}
+		{#each $_table.rows as row, rowIdx}
 			<tr>
 				<!-- Left aux -->
 				<td class="aux-cell aux-cell-left"
