@@ -2,10 +2,15 @@
 	import { Alignment, alignColumns, columnAlignments } from '../data/alignments-store';
 	import { selection } from '../data/selection-store';
 	import { range } from '../data/utils';
+	import { generateMarkdownTable } from '../data/markdown';
 
 	function alignSelectedColumns(alignment: Alignment) {
 		const s = selection.get();
 		alignColumns(range(s.startPos.x, s.endPos.x+1), alignment);
+	}
+
+	function copyMarkdownTableToClipboard() {
+		navigator.clipboard.writeText(generateMarkdownTable());
 	}
 
 </script>
@@ -47,7 +52,12 @@
 			>
 			<i aria-hidden="true" class="fas fa-align-right text-light"></i>
 		</button>
-		<button type="button" class="btn" aria-label="Copy to Clipboard">
+		<button
+			type="button"
+			class="btn"
+			aria-label="Copy to Clipboard"
+			on:click={copyMarkdownTableToClipboard}
+			>
 			<i aria-hidden="true" class="fas fa-copy text-light"></i>
 		</button>
 	</div>
