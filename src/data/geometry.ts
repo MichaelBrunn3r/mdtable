@@ -8,6 +8,10 @@ export class Position {
 		this.x = x;
 		this.y = y;
 	}
+
+	equals(x: number, y: number) {
+		return this.x == x && this.y == y;
+	}
 }
 
 export class Rect {

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tableStore as _table, selection } from '../data/table-store';
+	import { tableStore as _table, selection, focusedCell } from '../data/table-store';
+	import EditableCell from '../components/EditableCell.svelte';
 
 	let isSelecting = false;
 
@@ -47,7 +48,7 @@
 
 	.wrapper {
 		display: grid;
-		align-content: stretch;
+		justify-content: center;
 		padding-right: 0.01px; // Counteract selection border
 	}
 
@@ -68,7 +69,6 @@
 	}
 	.cell {
 		min-width: 40px;
-		min-height: 25px;
 		height: 25px;
 		border: $cell-border-width solid $cell-border-color;
 		cursor: cell;
@@ -151,7 +151,8 @@
 						class:selection-right={$selection.atRightEdge(columnIdx, rowIdx)}
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
 						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
-						{cell}
+
+						<EditableCell bind:value={cell} isSelected={$focusedCell.equals(columnIdx, rowIdx)}/>
 					</td>
 				{/each}
 			</tr>

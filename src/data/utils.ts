@@ -14,3 +14,7 @@ export function getableStore(init) {
 		get: () => get(store)
 	}
 }
+
+export function insertStrAtIdx(target: string, str: string, idx: number) {
+	return target.slice(0, idx) + str + target.slice(idx);
+}
