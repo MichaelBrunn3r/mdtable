@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { tableStore as _table, selection, focusedCell, tableStore } from '../data/table-store';
+	import { tableStore as _table } from '../data/table-store';
 	import { columnAlignments } from '../data/alignments-store';
+	import { selection, focusedCell } from '../data/selection-store';
 	import EditableCell from '../components/EditableCell.svelte';
 
 	let isSelecting = false;
