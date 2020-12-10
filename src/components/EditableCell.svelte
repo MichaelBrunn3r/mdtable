@@ -44,6 +44,7 @@
 		class:left={alignment === Alignment.LEFT}
 		class:right={alignment === Alignment.RIGHT}
 		class:center={alignment === Alignment.CENTER}
+		tabindex=-1
 		></div>
 {:else}
 	<div
@@ -53,5 +54,6 @@
 		class:left={alignment === Alignment.LEFT}
 		class:right={alignment === Alignment.RIGHT}
 		class:center={alignment === Alignment.CENTER}
+		tabindex=-1
 		></div>
 {/if}

@@ -24,7 +24,7 @@
 		}
 	}
 
-	function handleKeydown(e) {
+	function handleKeydown(e: KeyboardEvent) {
 		const key = e.key;
 		if(key === 'ArrowUp') {
 			selection.moveUp();
@@ -154,7 +154,10 @@
 						class:selection-left={$selection.atLeftEdge(columnIdx, rowIdx)}
 						class:selection-right={$selection.atRightEdge(columnIdx, rowIdx)}
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
-						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
+						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}
+						tabindex=0
+						on:focus={() => selection.selectCell(columnIdx, rowIdx)}
+						>
 
 						<EditableCell
 							bind:value={cell}
