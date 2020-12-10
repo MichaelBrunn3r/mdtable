@@ -1,30 +1,102 @@
 import { writable, derived, get, Writable } from 'svelte/store';
-import { Rect } from './geometry';
+import { Position, Rect } from './geometry';
 import { tableStore, Table } from './table-store';
 
+export class Selection extends Rect {
+	isActive: boolean = false
+
+	constructor() {
+		super(-1,-1,-1,-1);
+		this.reset();
+	}
+
+	reset() {
+		this.isActive = false;
+		this.startPos = new Position(-1,-1);
+		this.endPos = new Position(-1,-1);
+		return this;
+	}
+
+	focusedCell() {
+		return this.startPos;
+	}
+
+	selectRow(rowIdx: number) {
+		this.isActive = true;
+		this.startPos = new Position(0, rowIdx);
+		this.endPos = new Position(tableStore.get().numColumns-1, rowIdx);
+		return this;
+	}
+
+	selectColumn(columnIdx: number) {
+		this.isActive = true;
+		this.startPos = new Position(columnIdx, 0);
+		this.endPos = new Position(columnIdx, tableStore.get().numRows-1);
+		return this;
+	}
+
+	selectAll() {
+		this.isActive = true;
+		const t = _tableToRect(tableStore.get());
+		this.startPos = t.startPos;
+		this.endPos = t.endPos;
+		return this;
+	}
+
+	selectCell(columnIdx: number, rowIdx: number) {
+		this.isActive = true;
+		this.startPos = new Position(columnIdx, rowIdx);
+		this.endPos = new Position(columnIdx, rowIdx);
+		return this;
+	}
+
+	moveUp(){
+		this.move(0, -1);
+		return this;
+	}
+
+	moveDown(){
+		this.move(0, 1);
+		return this;
+	}
+
+	moveLeft(){
+		this.move(-1, 0);
+		return this;
+	}
+
+	moveRight(){
+		this.move(1, 0);
+		return this;
+	}
+
+	private move(columns: number, rows: number) {
+		if(this.isActive) {
+			this.collapse().translate(columns,rows).constrainToRect(_tableToRect(tableStore.get()));
+		}
+	}
+}
+
 function createSelection() {
-	const s = writable(new Rect(-1,-1,-1,-1));
+	const s = writable(new Selection());
 
 	return {
 		subscribe: s.subscribe,
 		update: s.update,
 		set: s.set,
 		get: () => get(s),
-		selectRow: (rowIdx: number) => s.set(new Rect(0, rowIdx, tableStore.get().numColumns-1, rowIdx)),
-		selectColumn: (columnIdx: number) => s.set(new Rect(columnIdx, 0, columnIdx, tableStore.get().numRows-1)),
-		selectAll: () => s.set(_tableToRect(tableStore.get())),
-		selectCell: (columnIdx: number, rowIdx: number) => s.set(new Rect(columnIdx, rowIdx, columnIdx, rowIdx)),
-		moveUp: () => _moveSelection(s, 0, -1),
-		moveDown: () => _moveSelection(s, 0, 1),
-		moveLeft: () => _moveSelection(s, -1, 0),
-		moveRight: () => _moveSelection(s, 1, 0)
-	}
-}
+		reset: () => s.update(s => s.reset()),
 
-function _moveSelection(selection: Writable<Rect>, columns: number, rows: number) {
-	selection.update(s => {
-		return s.collapse().translate(columns,rows).constrainToRect(_tableToRect(tableStore.get()))
-	})
+		selectRow: (rowIdx: number) => s.update(s => s.selectRow(rowIdx)),
+		selectColumn: (columnIdx: number) => s.update(s => s.selectColumn(columnIdx)),
+		selectAll: () => s.update(s => s.selectAll()),
+		selectCell: (columnIdx: number, rowIdx: number) => s.update(s => s.selectCell(columnIdx, rowIdx)),
+
+		moveUp: () => s.update(s => s.moveUp()),
+		moveDown: () => s.update(s => s.moveDown()),
+		moveLeft: () => s.update(s => s.moveLeft()),
+		moveRight: () => s.update(s => s.moveRight())
+	}
 }
 
 function _tableToRect(table: Table) {
@@ -32,5 +104,4 @@ function _tableToRect(table: Table) {
 }
 
 export const selection = createSelection();
-
-export const focusedCell = derived(selection, () => selection.get().startPos)
+export const focusedCell = derived(selection, () => selection.get().focusedCell())

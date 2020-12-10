@@ -24,6 +24,12 @@ export function alignColumn(columnIdx: number, alignment: Alignment) {
 	})
 }
 
+export function alignColumns(columns: Iterable<number>, alignment: Alignment) {
+	for(let column of columns) {
+		alignColumn(column, alignment);
+	}
+}
+
 const alignmentStore = createAlignments();
 
 export {

@@ -18,3 +18,14 @@ export function getableStore(init) {
 export function insertStrAtIdx(target: string, str: string, idx: number) {
 	return target.slice(0, idx) + str + target.slice(idx);
 }
+
+export function* range(start=0, end=null, step=1) {
+	if (end == null) {
+		end = start;
+		start = 0;
+	}
+
+	for (let i=start; i < end; i+=step) {
+		yield i;
+	}
+}
