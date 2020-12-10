@@ -1,5 +1,8 @@
 import { Rect } from './geometry';
 import { writable, derived, get, Writable } from 'svelte/store';
+import { Alignment, columnAlignments } from './alignments-store';
+
+// Table
 
 class Table {
 	rows: string[][]
@@ -17,16 +20,20 @@ function _tableToRect(table: Table) {
 	return new Rect(0,0,table.numColumns-1, table.numRows-1);
 }
 
-function createTable(rows: string[][], numColumns: number) {
-	const t = writable(new Table(rows, numColumns));
+function createTable() {
+	const t = writable(new Table([], 0));
 
 	return {
 		subscribe: t.subscribe,
-		set: t.set,
+		set: (table: Table) => {
+			t.set(table);
+			columnAlignments.set(new Array(table.numColumns).fill(Alignment.DEFAULT));
+		},
 		update: t.update,
 		get: () => get(t),
-		numColumns: derived(t, () => get(t).numColumns),
-		numRows: derived(t, () => get(t).numRows),
+
+		numColumns: derived(t, (t) => t.numColumns),
+		numRows: derived(t, (t) => t.numRows),
 		addRow,
 		addColumn,
 		removeRow,
@@ -34,20 +41,7 @@ function createTable(rows: string[][], numColumns: number) {
 	}
 }
 
-export const tableStore = createTable([
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','asdasdasdasdasdasd'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4'],
-	['1','2','3','4']
-],4);
+export const tableStore = createTable();
 
 function addRow() {
 	tableStore.update(table => {
@@ -65,6 +59,11 @@ function addColumn() {
 		table.rows.forEach(row => row.push(''))
 		table.numColumns++;
 		return table;
+	})
+
+	columnAlignments.update(alignments => {
+		alignments.push(Alignment.DEFAULT);
+		return alignments;
 	})
 }
 
@@ -84,6 +83,11 @@ function removeColumn() {
 			table.rows.forEach(row => row.pop())
 			table.numColumns--;
 			return table;
+		})
+
+		columnAlignments.update(alignments => {
+			alignments.pop();
+			return alignments;
 		})
 	}
 }
@@ -118,3 +122,20 @@ function _moveSelection(selection: Writable<Rect>, columns: number, rows: number
 export const selection = createSelection();
 
 export const focusedCell = derived(selection, () => selection.get().startPos)
+
+// Testing
+let table = new Table([
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','asdasdasdasdasdasd'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4'],
+	['1','2','3','4']
+], 4);
+tableStore.set(table);

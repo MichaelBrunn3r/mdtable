@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tableStore as _table, selection, focusedCell } from '../data/table-store';
+	import { tableStore as _table, selection, focusedCell, tableStore } from '../data/table-store';
+	import { columnAlignments } from '../data/alignments-store';
 	import EditableCell from '../components/EditableCell.svelte';
 
 	let isSelecting = false;
@@ -152,7 +153,11 @@
 						on:mousedown={() => onCellMouseDown(rowIdx, columnIdx)}
 						on:mouseover={() => onCellMouseOver(rowIdx, columnIdx)}>
 
-						<EditableCell bind:value={cell} isSelected={$focusedCell.equals(columnIdx, rowIdx)}/>
+						<EditableCell
+							bind:value={cell}
+							isSelected={$focusedCell.equals(columnIdx, rowIdx)}
+							alignment={$columnAlignments[columnIdx]}
+							/>
 					</td>
 				{/each}
 			</tr>
