@@ -34,6 +34,8 @@
 			selection.moveLeft();
 		} else if(key === 'ArrowRight') {
 			selection.moveRight();
+		} else if(key === 'Escape') {
+			selection.reset();
 		}
 	}
 
