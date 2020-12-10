@@ -32,6 +32,7 @@
 			type="button"
 			class="btn"
 			aria-label="Align column left"
+			disabled={!$selection.isActive}
 			on:click={() => alignSelectedColumns(Alignment.LEFT)}
 			>
 			<i aria-hidden="true" class="fas fa-align-left text-light"></i>
@@ -40,6 +41,7 @@
 			type="button"
 			class="btn"
 			aria-label="Align column center"
+			disabled={!$selection.isActive}
 			on:click={() => alignSelectedColumns(Alignment.CENTER)}
 			>
 			<i aria-hidden="true" class="fas fa-align-center text-light"></i>
@@ -48,6 +50,7 @@
 			type="button"
 			class="btn"
 			aria-label="Align column right"
+			disabled={!$selection.isActive}
 			on:click={() => alignSelectedColumns(Alignment.RIGHT)}
 			>
 			<i aria-hidden="true" class="fas fa-align-right text-light"></i>
